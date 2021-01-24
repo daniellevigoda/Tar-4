@@ -16,17 +16,14 @@ export default class CCCategory extends Component {
     }
   }
 
-  openNotes = ({ navigation }) => {
-    return (
-      // <TouchableOpacity onPress={() => navigation.navigate('Notes')}>
-      //   <Text>{this.props.data.name} {this.props.count}</Text>
-      // </TouchableOpacity>
-      <View>
-        <Text>{this.props.data.name} {this.props.count}</Text>
-        <Button title="BLA" onPress={() => navigation.navigate('Notes')} />
-      </View>
-    );
-  };
+  // openNotes = ({ navigation }) => {
+  //   return (
+  //     <View>
+  //       <Text>{this.props.data.name} {this.props.count}</Text>
+  //       <Button title="BLA" onPress={() => navigation.navigate('Notes')} />
+  //     </View>
+  //   );
+  // };
 
   componentDidMount = () => {
     this.setState({ notesArr: this.props.data.notes })
