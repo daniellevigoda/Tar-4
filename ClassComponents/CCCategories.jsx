@@ -109,11 +109,10 @@ export default class CCCategories extends Component {
     }
   }
 
-  getData = async () => {
+  getData = async () => { 
     try {
       let temp = await AsyncStorage.getItem('category')
       let getCategoryAS = temp != null ? JSON.parse(temp) : null;
-
       this.setState({ categoriesArr: getCategoryAS })
     }
     catch (e) {
