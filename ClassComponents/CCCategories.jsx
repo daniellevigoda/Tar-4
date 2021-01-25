@@ -13,11 +13,70 @@ export default class CCCategories extends Component {
       categoriesArr: [],
       isDialogVisible: false
     }
+    this.initiateStorage();
     this.getData();
   }
 
-  componentDidMount = () => {
-    this.setState({
+  //   componentDidMount = () => {
+  //     this.setState({
+  //       categoriesArr: [
+  //         {
+  //           id: 1,
+  //           name: "Personal",
+  //           notes: [
+  //             {
+  //               id: 1,
+  //               date: "Today at 10:40",
+  //               title: "Walk dog",
+  //               description: "Don't forget to take Danielle's dog out for a walk! You are its care giver for this week.",
+  //               image: "",
+  //               until: "To do until next week on Sunday"
+  //             },
+  //             {
+  //               id: 2,
+  //               date: "Sunday at 09:48",
+  //               title: "Homework",
+  //               description: "\nTo Do List:\n\t1. Do homework\n\t2. Post a review on Moodle\n\t3. Meet Shoval on Zoom to record a video.",
+  //               image: "https://mustafavarici.com/wp-content/uploads/2020/08/Homework-1024x682.jpeg",
+  //               until: "To do until Monday at 10: 00"
+  //             },
+  //             {
+  //               id: 3,
+  //               date: "Sunday at 22:18",
+  //               title: "More Homework",
+  //               description: "\nTo Do List:\n\t1. Do homework\n\t2. Post a review on Moodle\n\t3. Meet Shoval on Zoom to record a video.",
+  //               image: "https://mustafavarici.com/wp-content/uploads/2020/08/Homework-1024x682.jpeg",
+  //               until: "To do until Monday at 10: 00"
+  //             }
+  //           ]
+  //         },
+  //         {
+  //           id: 2,
+  //           name: "Work",
+  //           notes: [
+  //             {
+  //               id: 1,
+  //               date: "Today at 12:45",
+  //               title: "Send boss code",
+  //               description: "Make sure to send your boss the code you worked on last week, send him the Git connection.",
+  //               image: "",
+  //               until: "To do until today by 00: 00"
+  //             },
+  //             {
+  //               id: 2,
+  //               date: "Sunday at 11:03",
+  //               title: "Tasks",
+  //               description: "\nTo Do List:\n\t1. Component - Main, Second page\n\t2. Git - update everything",
+  //               image: "",
+  //               until: "Tomorrow at 12:00"
+  //             }
+  //           ],
+  //         }]
+  //     })
+  //  }
+
+  initiateStorage = async () => {
+    let jsonValue = JSON.stringify({
       categoriesArr: [
         {
           id: 1,
@@ -71,8 +130,15 @@ export default class CCCategories extends Component {
             }
           ],
         }]
-    })
-  }
+    });
+    try {
+      await AsyncStorage.setItem('category', jsonValue);
+    }
+    catch (error) {
+      console.log("categorysave ERROR, ", error);
+    }
+
+  };
 
   showDialog(isShow) {
     this.setState({ isDialogVisible: isShow });
@@ -82,13 +148,17 @@ export default class CCCategories extends Component {
     this.getData(value);
   }
 
-  setToAS = (value) => {
+  setToAS = async (value) => {
     let jsonValue = JSON.stringify(value);
-    AsyncStorage.setItem('category', jsonValue, () => {
-      console.log("category saved,", jsonValue)
+    try {
+      await AsyncStorage.setItem('category', jsonValue);
+    }
+    catch (error) {
+      console.log("categorysave ERROR, ", error);
+    }
 
-    });
-  }
+  };
+
   setData = (value) => {
     try {
       let newCategory = {
@@ -109,11 +179,13 @@ export default class CCCategories extends Component {
     }
   }
 
-  getData = async () => { 
+  getData = async () => {
     try {
-      let temp = await AsyncStorage.getItem('category')
+      let temp = await AsyncStorage.getItem('category');
+
       let getCategoryAS = temp != null ? JSON.parse(temp) : null;
       this.setState({ categoriesArr: getCategoryAS })
+
     }
     catch (e) {
       console.log("GET - error", e);
@@ -121,19 +193,20 @@ export default class CCCategories extends Component {
   }
 
   ifCategoriesArrNull = () => {
-    return <View>
-      {this.getData()}
-      <Icon
-        reverse
-        name='add'
-        size={30}
-        type='ionicon'
-        color='tomato'
-        onPress={() => { this.showDialog(true) }} />
-    </View>
+    return (
+      <View>
+        <Icon
+          reverse
+          name='add'
+          size={30}
+          type='ionicon'
+          color='tomato'
+          onPress={() => { this.showDialog(true) }} />
+      </View>)
   }
 
   ifCategoriesArrNOTNull = () => {
+    console.log('IF NOT NULL:', this.state.categoriesArr);
     return <View>
       <Text></Text>
       {this.state.categoriesArr.map(item =>

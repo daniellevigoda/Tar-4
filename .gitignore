@@ -62,3 +62,4 @@ Thumbs.db
 [Oo]bj
 [Tt]est[Rr]esults
 *.su
+node_modules

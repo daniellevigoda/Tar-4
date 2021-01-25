@@ -36,8 +36,8 @@ export default class CCCategory extends Component {
         <TouchableOpacity onPress={() => this.props.navigation.push('Notes', { notesArr: this.state.notesArr })}>
           <View>
             <Text>
-              <Text style={{ fontSize: 40, fontWeight: 'bold', fontFamily: 'Roboto' }}>{this.props.data.name}</Text>
-              <Text style={{ fontSize: 40, fontWeight: 'bold', fontFamily: 'Roboto' }}>{this.props.count}</Text>
+              <Text style={{ fontSize: 40, fontWeight: 'bold' }}>{this.props.data.name}</Text>
+              <Text style={{ fontSize: 40, fontWeight: 'bold' }}>{this.props.count}</Text>
             </Text>
           </View>
         </TouchableOpacity>
