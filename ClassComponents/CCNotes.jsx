@@ -44,6 +44,7 @@ export default class CCNotes extends Component {
     return (
       <ScrollView>
         <TouchableOpacity>
+          {console.log("notesArr: ", this.props.route.params.notesArr)}
           {this.props.route.params.notesArr.map(item =>
             <Card key={item.id}>
               <Card.Title>{item.title}</Card.Title>
@@ -55,7 +56,7 @@ export default class CCNotes extends Component {
               </Text>
               {item.image != "" ? <Card.Image source={{ uri: item.image }}></Card.Image> : <Text></Text>}
               <Item style={{ justifyContent: 'flex-end', padding: 10 }}>
-                <Button onPress={this.deleteNote(item.id, item.title)} style={{ margin: 5, backgroundColor: 'tomato' }}>
+                <Button onPress={() => this.deleteNote(item.id, item.title)} style={{ margin: 5, backgroundColor: 'tomato' }}>
                   <Icon name='trash' style={{ color: '#ffffff' }} />
                 </Button>
               </Item>
@@ -64,7 +65,8 @@ export default class CCNotes extends Component {
 
         <TouchableOpacity>
           <Item style={{ justifyContent: 'center', padding: 10 }}>
-            <Icon name='add-circle' style={{ color: 'green', fontSize: 60 }} onPress={() => { this.props.navigation.push('Add New Note', { notes: this.state.notesArr }) }} />
+            <Icon name='add-circle' style={{ color: '#ff5e5b', fontSize: 60 }} onPress={() => {
+              this.props.navigation.push('Add New Note', { notes: this.state.notesArr }) }} />
           </Item>
           {console.log(this.state.notesArr.length)}
         </TouchableOpacity>

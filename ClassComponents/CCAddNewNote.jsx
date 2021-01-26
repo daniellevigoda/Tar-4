@@ -63,7 +63,7 @@ export default class CCAddNewNote extends Component {
   render() {
     return (
       <Container>
-        {console.log('ADD ', this.props.notes.length + 1)}
+        {console.log('ADD ', this.props.route.params.notes.length + 1)}
         <Content>
           <Form>
             <Item style={{ padding: 10 }}>
@@ -97,12 +97,12 @@ export default class CCAddNewNote extends Component {
             </Item>
 
             <Item style={{ justifyContent: 'center', padding: 10 }}>
-              <Button style={{ backgroundColor: 'tomato', margin: 'auto' }}>
+              <Button style={{ backgroundColor: '#ff5e5b', margin: 'auto' }}>
                 <Icon name='camera' style={{ color: '#ffffff' }} />
                 <Text style={{ color: '#ffffff' }}>Camera</Text>
               </Button>
               <Text>   </Text>
-              <Button style={{ backgroundColor: 'tomato', margin: 'auto' }}>
+              <Button style={{ backgroundColor: '#ff5e5b', margin: 'auto' }}>
                 <Icon name='image' style={{ color: '#ffffff' }} />
                 <Text style={{ color: '#ffffff' }}>Gallery</Text>
               </Button>
