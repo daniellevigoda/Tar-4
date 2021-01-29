@@ -5,12 +5,6 @@ import { Card, ListItem } from 'react-native-elements';
 import { Item, Button, Container, Icon } from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-
-const Stack = createStackNavigator();
-
-
 export default class CCNotes extends Component {
   constructor(props) {
     super(props);
@@ -18,7 +12,10 @@ export default class CCNotes extends Component {
       categoriesArr: [],
       notesArr: []
     }
-    this.getData()
+  }
+
+  componentDidMount = () => {
+    this.getData();
   }
 
   getData = async () => {
@@ -66,7 +63,8 @@ export default class CCNotes extends Component {
         <TouchableOpacity>
           <Item style={{ justifyContent: 'center', padding: 10 }}>
             <Icon name='add-circle' style={{ color: '#ff5e5b', fontSize: 60 }} onPress={() => {
-              this.props.navigation.push('Add New Note', { notes: this.state.notesArr }) }} />
+              this.props.navigation.push('Add New Note', { notes: this.state.notesArr })
+            }} />
           </Item>
           {console.log(this.state.notesArr.length)}
         </TouchableOpacity>
@@ -74,5 +72,4 @@ export default class CCNotes extends Component {
     )
   }
 }
-
 const styles = StyleSheet.create({})

@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Card, ListItem } from 'react-native-elements';
-import { Content, Form, Item, Input, Label, Button, Textarea, Container, Icon, Text, Footer } from 'native-base';
+import { Content, Form, Item, Input, Label, Button, Textarea, Container, Icon, Text, Footer, Image } from 'native-base';
 import DatePicker from 'react-native-datepicker';
-import CCNotes from '../ClassComponents/CCNotes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createStackNavigator } from '@react-navigation/stack';
 
+const Stack = createStackNavigator();
 
 export default class CCAddNewNote extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      notes: [],
+      notes: this.props.route.params.notes,
       id: "",
       date: new Date().getDate(),
       title: "",
@@ -19,51 +20,56 @@ export default class CCAddNewNote extends Component {
       image: "",
       until: new Date().getDate(),
     };
+  }
+
+  componentDidMount = () => {
     this.getData();
+  }
+
+  setData = async() => {
+    let newNote = {
+      id: this.state.notes.length + 1,
+      date: this.state.date,
+      title: this.state.title,
+      description: this.state.description,
+      image: this.props.selectedImg,
+      until: this.state.until
+    }
+    console.log("SET NEW NOTE: " ,newNote)
+    let notes = this.state.notes;
+    notes.push(newNote);
+    try {
+      await AsyncStorage.setItem('note', JSON.stringify(notes));
+      console.log("notes stringify: " ,notes)
+      this.getData();
+    }
+    catch (e) {
+      console.log("SET - error", e);
+    }
   }
 
   getData = async () => {
     try {
-      let temp = await AsyncStorage.getItem('category')
-      let getCategoryAS = temp != null ? JSON.parse(temp) : null;
-      this.setState({ categoriesArr: getCategoryAS, notes: this.props.notes })
-    }
-    catch (e) {
-      console.log("GET - error ADD", e);
-    }
-  }
-
-  sendToState = () => {
-    try {
-      let newNote = {
-        id: this.props.notes.length + 1,
-        date: this.state.date,
-        title: this.state.title,
-        description: this.state.description,
-        image: this.state.image,
-        until: this.state.until
-      }
-      let mishu = [...this.props.notes, newNote];
-      console.log(mishu);
-      this.setState({ notes: mishu });
-      //this.sendToAS();
+      let notes = await AsyncStorage.getItem('note');
+      console.log("GET NOTES: " ,notes);
+      let getNotesAS = notes != null ? JSON.parse(notes) : null;
+      this.setState({ notes: getNotesAS })
     }
     catch (e) {
       console.log("GET - error", e);
     }
   }
 
-  sendToAS = (value) => {
-    let jsonValue = JSON.stringify(value);
-    AsyncStorage.setItem('category', jsonValue, () => {
-      console.log("category saved,", jsonValue)
-    });
+  goToNotes = () => {
+    this.setData();
+    this.props.navigation.navigate('Notes', {notesArr: this.state.notes});
   }
 
   render() {
     return (
       <Container>
-        {console.log('ADD ', this.props.route.params.notes.length + 1)}
+        {/* {console.log(this.props.data)} */}
+        {console.log('Notes length: ', this.props.route.params.notes.length + 1)}
         <Content>
           <Form>
             <Item style={{ padding: 10 }}>
@@ -102,15 +108,18 @@ export default class CCAddNewNote extends Component {
                 <Text style={{ color: '#ffffff' }}>Camera</Text>
               </Button>
               <Text>   </Text>
-              <Button style={{ backgroundColor: '#ff5e5b', margin: 'auto' }}>
+              <Button style={{ backgroundColor: '#ff5e5b', margin: 'auto' }} onPress={
+                ()=>{this.props.navigation.navigate('Gallery')}}>
+                {/* {console.log("IMG URI ADD-NEW-NOTE: ", this.state.image)} */}
                 <Icon name='image' style={{ color: '#ffffff' }} />
                 <Text style={{ color: '#ffffff' }}>Gallery</Text>
               </Button>
+              {/* <Image source={this.state.image} style={{ width: 200, height: 200 }} /> */}
             </Item>
           </Form>
         </Content>
         <Item style={{ justifyContent: 'center', padding: 10 }}>
-          <Button style={{ margin: 5 }} onPress={this.sendToState} >
+          <Button style={{ margin: 5 }} onPress={this.goToNotes} >
             <Icon name='checkmark' style={{ color: '#ffffff' }} />
           </Button>
         </Item>

@@ -119,6 +119,10 @@ export default class CCCategories extends Component {
     }
   }
 
+  removeCategory = () => {
+    
+  }
+
   render() {
 
     return (

@@ -5,6 +5,7 @@ import CCNotes from './ClassComponents/CCNotes';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import CCAddNewNote from './ClassComponents/CCAddNewNote';
+import CCGallery from './ClassComponents/CCGallery';
 
 const Stack = createStackNavigator();
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
         <Stack.Screen name="Categories" component={CCCategories} />
         <Stack.Screen name="Notes" component={CCNotes} />
         <Stack.Screen name="Add New Note" component={CCAddNewNote} />
+        <Stack.Screen name="Gallery" component={CCGallery} />
       </Stack.Navigator>
     </NavigationContainer>
   );
