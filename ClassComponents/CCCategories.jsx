@@ -87,14 +87,13 @@ export default class CCCategories extends Component {
     this.setState({ isDialogVisible: isShow });
   }
 
-  setData = async (value) => {
+  addNewCategory = async (value) => {
     let newCategory = {
-      id: this.state.categoriesArr.length + 1,
       name: value,
       notes: []
     }
     let categoriesArr = this.state.categoriesArr;
-    categoriesArr.push(newCategory);
+    categoriesArr == null ? categoriesArr = [newCategory] : categoriesArr.push(newCategory);
     try {
       await AsyncStorage.setItem('category', JSON.stringify(categoriesArr));
       this.getData();
@@ -119,7 +118,20 @@ export default class CCCategories extends Component {
     }
   }
 
-  removeCategory = () => {
+  updateCategoryNotes = async(categoryIndex, notesArr) => {
+    let categoriesArr = this.state.categoriesArr;
+    categoriesArr[categoryIndex].notes = notesArr;
+    try {
+      await AsyncStorage.setItem('category', JSON.stringify(categoriesArr));
+      this.getData();
+      this.showDialog(false)
+    }
+    catch (error) {
+      console.log("categorysave ERROR, ", error);
+    }
+  }
+
+  removeCategory = (categoryIndex) => {
     
   }
 
@@ -130,15 +142,15 @@ export default class CCCategories extends Component {
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
           {
             this.state.categoriesArr &&
-            this.state.categoriesArr.map(item =>
-              <CCCategory key={item.id} data={item} count={item.notes.length} navigation={this.props.navigation} />)
+            this.state.categoriesArr.map((item, index) =>
+              <CCCategory key={index} categoryKey={index} data={item} count={item.notes.length} navigation={this.props.navigation} updateCategoryNotes={this.updateCategoryNotes} />)
           }
           {
             this.state.isDialogVisible &&
             <DialogInput isDialogVisible={this.state.isDialogVisible}
               title={"Add New Category"}
               hintInput={"Category Name"}
-              submitInput={(inputText) => { this.setData(inputText) }}
+              submitInput={(inputText) => { this.addNewCategory(inputText) }}
               closeDialog={() => { this.showDialog(false) }}>
             </DialogInput>
           }

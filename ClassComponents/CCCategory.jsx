@@ -21,7 +21,7 @@ export default class CCCategory extends Component {
   render() {
     return (
       <View>
-        <TouchableOpacity style={styles.card} onPress={() => this.props.navigation.push('Notes', { notesArr: this.state.notesArr, data: this.props.data })}>
+        <TouchableOpacity style={styles.card} onPress={() => this.props.navigation.push('Notes', { notesArr: this.state.notesArr, data: this.props.data, updateCategoryNotes: this.props.updateCategoryNotes, categoryKey: this.props.categoryKey })}>
             <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#f7f7f7' }}>{this.props.data.name}{this.props.count}</Text>
             <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#ff5e5b' }}>{this.props.count}</Text>
         </TouchableOpacity>

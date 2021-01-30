@@ -21,29 +21,35 @@ export default class CCNotes extends Component {
   getData = async () => {
     try {
       let temp = await AsyncStorage.getItem('category')
-      let getCategoryAS = temp != null ? JSON.parse(temp) : null;
-      this.setState({ categoriesArr: getCategoryAS })
+      let getCategoryAS = JSON.parse(temp);
+      let notes = getCategoryAS[this.props.route.params.categoryKey].notes;
+      this.setState({ categoriesArr: getCategoryAS, notesArr: notes });
     }
     catch (e) {
       console.log("GET - error NOTES", e);
     }
   }
 
-  deleteNote = (id, title) => {
-    this.props.route.params.notesArr.map(item => {
-      if (item.id === id && item.title === title) {
-        AsyncStorage.removeItem('category', item.id)
-      }
-    })
+  addNote = (note) => {
+    let notesArr = this.state.notesArr;
+    notesArr.push(note);
+    this.props.route.params.updateCategoryNotes(this.props.route.params.categoryKey, notesArr);
+    this.getData();
+  }
+
+  deleteNote = (index) => {
+    let notesArr = this.state.notesArr;
+    notesArr.splice(index, 1);
+    this.props.route.params.updateCategoryNotes(this.props.route.params.categoryKey, notesArr);
+    this.getData();
   }
 
   render() {
     return (
       <ScrollView>
         <TouchableOpacity>
-          {console.log("notesArr: ", this.props.route.params.notesArr)}
-          {this.props.route.params.notesArr.map(item =>
-            <Card key={item.id}>
+          {this.state.notesArr.map((item, index) =>
+            <Card key={index}>
               <Card.Title>{item.title}</Card.Title>
               <Card.Divider />
               <Text style={{ marginBottom: 10 }}>
@@ -53,7 +59,7 @@ export default class CCNotes extends Component {
               </Text>
               {item.image != "" ? <Card.Image source={{ uri: item.image }}></Card.Image> : <Text></Text>}
               <Item style={{ justifyContent: 'flex-end', padding: 10 }}>
-                <Button onPress={() => this.deleteNote(item.id, item.title)} style={{ margin: 5, backgroundColor: 'tomato' }}>
+                <Button onPress={() => this.deleteNote(index)} style={{ margin: 5, backgroundColor: 'tomato' }}>
                   <Icon name='trash' style={{ color: '#ffffff' }} />
                 </Button>
               </Item>
@@ -63,13 +69,12 @@ export default class CCNotes extends Component {
         <TouchableOpacity>
           <Item style={{ justifyContent: 'center', padding: 10 }}>
             <Icon name='add-circle' style={{ color: '#ff5e5b', fontSize: 60 }} onPress={() => {
-              this.props.navigation.push('Add New Note', { notes: this.state.notesArr })
+              this.props.navigation.push('Add New Note', { notes: this.state.notesArr, data: this.props.route.params.data, updateCategoryNotes: this.props.route.params.updateCategoryNotes, categoryKey: this.props.categoryKey, addNote: this.addNote })
             }} />
           </Item>
-          {console.log(this.state.notesArr.length)}
         </TouchableOpacity>
       </ScrollView>
     )
   }
 }
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

@@ -12,64 +12,49 @@ export default class CCAddNewNote extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      notes: this.props.route.params.notes,
+      categoriesArr: [],
+      notesArr: [],
       id: "",
       date: new Date().getDate(),
       title: "",
       description: "",
       image: "",
-      until: new Date().getDate(),
-    };
+      until: new Date().getDate()
+    }
   }
 
   componentDidMount = () => {
     this.getData();
   }
 
-  setData = async() => {
+  addNote = () => {
     let newNote = {
-      id: this.state.notes.length + 1,
+      id: this.state.notesArr.length + 1,
       date: this.state.date,
       title: this.state.title,
       description: this.state.description,
       image: this.props.selectedImg,
       until: this.state.until
     }
-    console.log("SET NEW NOTE: " ,newNote)
-    let notes = this.state.notes;
-    notes.push(newNote);
-    try {
-      await AsyncStorage.setItem('note', JSON.stringify(notes));
-      console.log("notes stringify: " ,notes)
-      this.getData();
-    }
-    catch (e) {
-      console.log("SET - error", e);
-    }
+    this.props.route.params.addNote(newNote);
+    this.props.navigation.goBack();
   }
 
   getData = async () => {
     try {
-      let notes = await AsyncStorage.getItem('note');
-      console.log("GET NOTES: " ,notes);
-      let getNotesAS = notes != null ? JSON.parse(notes) : null;
-      this.setState({ notes: getNotesAS })
+      let temp = await AsyncStorage.getItem('category')
+      let getCategoryAS = JSON.parse(temp);
+      let notes = getCategoryAS[this.props.route.params.categoryKey].notes;
+      this.setState({ categoriesArr: getCategoryAS, notesArr: notes });
     }
     catch (e) {
-      console.log("GET - error", e);
+      console.log("GET - error NOTES", e);
     }
-  }
-
-  goToNotes = () => {
-    this.setData();
-    this.props.navigation.navigate('Notes', {notesArr: this.state.notes});
   }
 
   render() {
     return (
       <Container>
-        {/* {console.log(this.props.data)} */}
-        {console.log('Notes length: ', this.props.route.params.notes.length + 1)}
         <Content>
           <Form>
             <Item style={{ padding: 10 }}>
@@ -119,11 +104,10 @@ export default class CCAddNewNote extends Component {
           </Form>
         </Content>
         <Item style={{ justifyContent: 'center', padding: 10 }}>
-          <Button style={{ margin: 5 }} onPress={this.goToNotes} >
+          <Button style={{ margin: 5 }} onPress={this.addNote} >
             <Icon name='checkmark' style={{ color: '#ffffff' }} />
           </Button>
         </Item>
-        {console.log(this.state.title, this.state.description)}
       </Container>
     )
   }
