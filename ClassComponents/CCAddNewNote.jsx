@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Image, Text } from 'react-native'
 import { Card, ListItem } from 'react-native-elements';
-import { Content, Form, Item, Input, Label, Button, Textarea, Container, Icon, Text, Footer, Image } from 'native-base';
+import { Content, Form, Item, Input, Label, Button, Textarea, Container, Icon, Footer } from 'native-base';
 import DatePicker from 'react-native-datepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createStackNavigator } from '@react-navigation/stack';
+import * as ImagePicker from 'expo-image-picker';
+
 
 const Stack = createStackNavigator();
 
@@ -18,13 +20,22 @@ export default class CCAddNewNote extends Component {
       date: new Date().getDate(),
       title: "",
       description: "",
-      image: "",
+      image: null,
       until: new Date().getDate()
     }
   }
 
   componentDidMount = () => {
     this.getData();
+    this.fullDate();
+  }
+
+  fullDate = () => {
+    let day = new Date().getDate();
+    let month = new Date().getMonth() + 1;
+    let year = new Date().getFullYear();
+
+    this.setState({ date: day + '-' + month + '-' + year })
   }
 
   addNote = () => {
@@ -33,7 +44,7 @@ export default class CCAddNewNote extends Component {
       date: this.state.date,
       title: this.state.title,
       description: this.state.description,
-      image: this.props.selectedImg,
+      image: this.state.image,
       until: this.state.until
     }
     this.props.route.params.addNote(newNote);
@@ -50,6 +61,44 @@ export default class CCAddNewNote extends Component {
     catch (e) {
       console.log("GET - error NOTES", e);
     }
+  }
+
+  btnOpenGallery = async () => {
+    let permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    console.log("RESULT: ", permission);
+    if (permission.granted === false) {
+      alert('Permission to access camera roll is required!');
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.All, allowsEditing: true })
+
+    console.log(result);
+
+    if (result.cancelled === true) {
+      return;
+    }
+    this.setState({ image: result.uri });
+  }
+
+  btnOpenCamera = async () => {
+    let permission = await ImagePicker.requestCameraPermissionsAsync();
+
+    console.log("RESULT: ", permission);
+    if (permission.granted === false) {
+      alert('Permission to access camera roll is required!');
+      return;
+    }
+
+    let result = await ImagePicker.launchCameraAsync();
+
+    console.log(result);
+
+    if (result.cancelled === true) {
+      return;
+    }
+    this.setState({ image: result.uri });
   }
 
   render() {
@@ -86,25 +135,27 @@ export default class CCAddNewNote extends Component {
                 onDateChange={(date) => { this.setState({ until: date }) }}
               />
             </Item>
-
+            <View>
+                {this.state.image &&
+                  <Image source={{ uri: this.state.image }} style={{ width: 200, height: 200 }} />}
+              </View>
             <Item style={{ justifyContent: 'center', padding: 10 }}>
-              <Button style={{ backgroundColor: '#ff5e5b', margin: 'auto' }}>
+              <Button style={{ backgroundColor: '#ff5e5b', margin: 'auto', padding: 10 }} onPress={() => { this.btnOpenCamera()}}>
                 <Icon name='camera' style={{ color: '#ffffff' }} />
                 <Text style={{ color: '#ffffff' }}>Camera</Text>
               </Button>
               <Text>   </Text>
-              <Button style={{ backgroundColor: '#ff5e5b', margin: 'auto' }} onPress={
-                ()=>{this.props.navigation.navigate('Gallery')}}>
+              <Button style={{ backgroundColor: '#ff5e5b', margin: 'auto', padding: 10 }} onPress={() => { this.btnOpenGallery()}}>
                 {/* {console.log("IMG URI ADD-NEW-NOTE: ", this.state.image)} */}
                 <Icon name='image' style={{ color: '#ffffff' }} />
                 <Text style={{ color: '#ffffff' }}>Gallery</Text>
               </Button>
-              {/* <Image source={this.state.image} style={{ width: 200, height: 200 }} /> */}
+              
             </Item>
           </Form>
         </Content>
         <Item style={{ justifyContent: 'center', padding: 10 }}>
-          <Button style={{ margin: 5 }} onPress={this.addNote} >
+          <Button style={{ margin: 5, backgroundColor: '#42bd79', marginBottom: 30 }} onPress={this.addNote} >
             <Icon name='checkmark' style={{ color: '#ffffff' }} />
           </Button>
         </Item>

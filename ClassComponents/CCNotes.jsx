@@ -57,7 +57,7 @@ export default class CCNotes extends Component {
               Description: {item.description}{"\n"}
               Until: {item.until}
               </Text>
-              {item.image != "" ? <Card.Image source={{ uri: item.image }}></Card.Image> : <Text></Text>}
+              {item.image && <Card.Image source={{ uri: item.image }}></Card.Image>}
               <Item style={{ justifyContent: 'flex-end', padding: 10 }}>
                 <Button onPress={() => this.deleteNote(index)} style={{ margin: 5, backgroundColor: 'tomato' }}>
                   <Icon name='trash' style={{ color: '#ffffff' }} />

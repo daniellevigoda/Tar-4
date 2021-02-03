@@ -2,9 +2,9 @@
   "expoServerPort": 19000,
   "packagerPort": 19000,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerNgrokUrl": "https://f8-xpm.anonymous.tar-4.exp.direct",
+  "packagerNgrokUrl": "https://packager.f8-xpm.anonymous.tar-4.exp.direct",
+  "ngrokPid": 6572,
   "webpackServerPort": null,
   "devToolsPort": 19002
 }
