@@ -137,7 +137,7 @@ export default class CCAddNewNote extends Component {
             </Item>
             <View>
                 {this.state.image &&
-                  <Image source={{ uri: this.state.image }} style={{ width: 200, height: 200 }} />}
+                  <Image source={{ uri: this.state.image }} style={{ width: 200, height: 200, margin: 'auto' }} />}
               </View>
             <Item style={{ justifyContent: 'center', padding: 10 }}>
               <Button style={{ backgroundColor: '#ff5e5b', margin: 'auto', padding: 10 }} onPress={() => { this.btnOpenCamera()}}>
